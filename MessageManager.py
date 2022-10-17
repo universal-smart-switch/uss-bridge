@@ -1,5 +1,7 @@
 import DefinedInformation
 from enum import Enum
+import codecs
+from array import array
 # types of messages
 class BCCommand(Enum):
     BCCINVALID = DefinedInformation.DefinedInformation.BCCInvalid
@@ -21,6 +23,7 @@ class BCMessage:
     def CreateFromScratch(self,command,data,switchId):
         self.command = command
         self.commandRaw = command.value
+        self.dataString = data
         self.data = bytes(data, 'utf-8')
 
         # int to byte
@@ -38,7 +41,8 @@ class BCMessage:
         self.fullMessage.append(self.id)
 
         # calculate length
-        self.length = len(data)
+        lengthInt = len(data)
+        #self.length = len(data)
 
         # calc checksum and add to message
         self.checkSum = self.CalcCheckSum(data)
@@ -46,7 +50,9 @@ class BCMessage:
         self.correct = True
 
         # add length to message
-        self.fullMessage.append(self.length)
+        # self.fullMessage.append(self.length)
+        for item in lengthInt.to_bytes(3, 'big'):
+            self.fullMessage.append(item)
 
         # add mark bytes to message
         for item in bytes(DefinedInformation.DefinedInformation.BCMark, 'utf-8'):
@@ -55,18 +61,17 @@ class BCMessage:
     def CreateFromRaw(self, raw):
 
         self.fullMessage = raw
-
+        self.fullMessage.reverse()
+        
         self.RemoveFirstItems(self.fullMessage,2)  #remove mark bytes
 
         # save length and remove
-        lengthBytes = [self.fullMessage[0], self.fullMessage[1]]
+        lengthBytes = [self.fullMessage[2],self.fullMessage[1],self.fullMessage[0]]
         self.length =  int.from_bytes(lengthBytes, "big")
-        self.RemoveFirstItems(self.fullMessage,2)
+        self.RemoveFirstItems(self.fullMessage,3)
 
         # save and remove checksum from message
-        self.checkSum = self.fullMessage[0]
-     
-        
+        self.checkSum = self.fullMessage[0]      
         self.RemoveFirstItems(self.fullMessage,1)  # remove checksum from message
 
         # save id and remove
@@ -78,10 +83,13 @@ class BCMessage:
         self.command = BCCommand(self.commandRaw)
         self.RemoveFirstItems(self.fullMessage,1)
 
-        data = self.fullMessage.decode('utf-8')
+    	# save string
+        self.fullMessage.reverse()  # reverse in order to get string in right order
+        res = array("b", self.fullMessage)
+        self.dataString = codecs.decode(res, 'UTF-8')
 
         # save checksum
-        self.realCheckSum =  self.CalcCheckSum(self.fullMessage)
+        self.realCheckSum =  self.CalcCheckSum(self.dataString)
         if( self.realCheckSum == self.checkSum):
             self.correct = True
         else:
@@ -116,9 +124,13 @@ class BCMessage:
             coll.remove(coll[0])
 #testing
 
-tmpMsg = BCMessage()
-tmpMsg.CreateFromScratch(BCCommand.BCCGETMODESWITCH,"hallo",12)
+#tmpMsg = BCMessage()
+#tmpMsg.CreateFromScratch(BCCommand.BCCGETMODESWITCHES,"hiWelt",34)
 
-testMsg = BCMessage()
-tmpMsg.CreateFromRaw(tmpMsg.fullMessage)
-test = 3
+#testMsg = BCMessage()
+#testMsg.CreateFromRaw(tmpMsg.fullMessage.copy())
+
+#print("Checksum correct : + {}".format(testMsg.checkSum))
+#print("Values [S|R] : " + tmpMsg.dataString + "|" + testMsg.dataString)
+#print("CommandRaw [S|R] : " + tmpMsg.commandRaw + "|" + testMsg.commandRaw)
+#print("Command [S|R] : " + tmpMsg.command + "|" + testMsg.command)
