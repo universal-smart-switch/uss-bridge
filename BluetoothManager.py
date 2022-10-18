@@ -7,6 +7,10 @@
 
 import bluetooth
 
+currentClientBMA = 00
+
+buffer = []
+
 def receiveMessages():
   server_sock=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
   
@@ -23,11 +27,11 @@ def receiveMessages():
   client_sock.close()
   server_sock.close()
   
-def sendMessageTo(targetBluetoothMacAddress):
+def sendMessageTo(targetBluetoothMacAddress,message):
   port = 1
   sock=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
   sock.connect((targetBluetoothMacAddress, port))
-  sock.send("hello!!")
+  sock.send(message)
   sock.close()
   
 def lookUpNearbyBluetoothDevices():

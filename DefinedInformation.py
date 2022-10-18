@@ -2,6 +2,12 @@ class DefinedInformation:
     BCMark = "$C"
     BSMark = "$S"
 
+    
+    BSBytesMark = 2
+    BSBytesLength = 3
+    BSBytesCheckSum = 1
+    BSBytesHeader = BSBytesMark + BSBytesLength
+
     BCCInvalid = 1
     BCCGetSwitches = 2
     BCCGetModeSwitches = 3
