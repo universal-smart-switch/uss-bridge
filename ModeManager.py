@@ -1,11 +1,14 @@
 from enum import Enum
-import GlobalStates
+import DefinedInformation
+import xml.etree.ElementTree as ET
+import json
 
 # possible types of characteristics
 class CharacteristicType(Enum):
+    BLANK = 0
     TEMPERATURE = 1
     DATE = 2
-    BLANK = 3
+   
 
 class Characterisic:
     met = False
@@ -23,10 +26,7 @@ class Mode:
     invert = False   
     executeMet = False  # execute condition met?
     onSingle = True # execute switch at first met characteristic
-
-    def __init__(self,name,Characterisic):
-        self.characteristicsToMet.append(Characterisic)
-        self.name = name
+    name = ''
     
     def CheckSpecific(self, CharacteristicType,value):    # update met-value of single characteristic type
         for x in self.characteristicsToMet:
@@ -46,6 +46,22 @@ class Mode:
             else:
                 tempMet = False
         self.executeMet = tempMet  # save new value
+
+    def FromXML(self,rawXMLString):
+        rawXML = ET.fromstring(rawXMLString)
+
+        if(rawXML.tag == 'mode'):
+            self.name = rawXML.get('name')
+            for child in rawXML:
+                characType = CharacteristicType(int(child.get('type')))
+                characVal = child.get('value')
+                characMet = child.get('met')
+                characInv = child.get('invert')
+
+                characToAdd = Characterisic(characType,characVal,characInv)
+                self.characteristicsToMet.clear
+                self.characteristicsToMet.append(characToAdd)
+   
 
 class ModeManager:
     modeList = [] # list of possible modes to select
@@ -68,11 +84,9 @@ class ModeManager:
         self.selectedMode.CheckSpecific(CharacteristicType,value)
         self.CheckSelectedMode()
 
-
-
 # testing purpose
 tmpChrc = Characterisic(CharacteristicType.TEMPERATURE,22,False)
-tmpMd = Mode("firstMode",tmpChrc)
+tmpMd = Mode()
 
 
 newTemp = 24
@@ -82,3 +96,11 @@ print(tmpMd.CheckExecuteMet())
 newTemp = 22
 tmpMd.CheckSpecific(CharacteristicType.TEMPERATURE,newTemp)
 print(tmpMd.CheckExecuteMet())
+
+#jsonstr1 = json.dumps(tmpMd.__dict__)
+#print(jsonstr1)
+
+testuuus = '<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<mode name=\"hiii\" invert=\"False\" executemet=\"False\" onSingle=\"False\">\r\n  <characteristic type=\"1\" value=\"22\" invert=\"False\" met=\"False\" />\r\n</mode>'
+
+secondMode = Mode()
+secondMode.FromXML(testuuus)
