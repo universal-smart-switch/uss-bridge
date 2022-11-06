@@ -1,7 +1,7 @@
 from enum import Enum
 import DefinedInformation
 import xml.etree.ElementTree as ET
-import json
+from xml.dom import minidom
 
 # possible types of characteristics
 class CharacteristicType(Enum):
@@ -62,6 +62,17 @@ class Mode:
                 self.characteristicsToMet.clear
                 self.characteristicsToMet.append(characToAdd)
    
+   def ToXML(self):
+        rawXML = minidom.Document()
+        xml = rawXML.createElement('mode')
+        rawXML.appendChild(xml)
+
+        for item in self.characteristicsToMet:
+            itemChild = rawXML.createElement('characteristic')
+            itemChild.setAttribute('type', item.CharacteristicType)
+            xml.appendChild(itemChild)
+
+        return rawXML.toprettyxml(indent="\t")
 
 class ModeManager:
     modeList = [] # list of possible modes to select
