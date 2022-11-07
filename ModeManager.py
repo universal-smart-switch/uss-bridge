@@ -61,18 +61,14 @@ class Mode:
                 characToAdd = Characterisic(characType,characVal,characInv)
                 self.characteristicsToMet.clear
                 self.characteristicsToMet.append(characToAdd)
-   
-   def ToXML(self):
-        rawXML = minidom.Document()
-        xml = rawXML.createElement('mode')
-        rawXML.appendChild(xml)
 
-        for item in self.characteristicsToMet:
-            itemChild = rawXML.createElement('characteristic')
-            itemChild.setAttribute('type', item.CharacteristicType)
-            xml.appendChild(itemChild)
-
-        return rawXML.toprettyxml(indent="\t")
+    def ToXML(self):
+       root = ET.Element("mode",name=self.name,invert=format(self.invert),executemet=format(self.executeMet),onSingle=format(self.onSingle))
+       for item in self.characteristicsToMet:
+        ET.SubElement(root, "characteristic",type=format(item.CharacteristicType.value) ,value=item.value,invert=format(self.invert),met=format(self.executeMet))
+       
+       tree = ET.ElementTree(root)
+       return ET.tostring(root, encoding='utf8', method='xml')
 
 class ModeManager:
     modeList = [] # list of possible modes to select
@@ -102,11 +98,11 @@ tmpMd = Mode()
 
 newTemp = 24
 tmpMd.CheckSpecific(CharacteristicType.TEMPERATURE,newTemp)
-print(tmpMd.CheckExecuteMet())
+#print(tmpMd.CheckExecuteMet())
 
 newTemp = 22
 tmpMd.CheckSpecific(CharacteristicType.TEMPERATURE,newTemp)
-print(tmpMd.CheckExecuteMet())
+#print(tmpMd.CheckExecuteMet())
 
 #jsonstr1 = json.dumps(tmpMd.__dict__)
 #print(jsonstr1)
@@ -115,3 +111,16 @@ testuuus = '<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<mode name=\"hiii\" i
 
 secondMode = Mode()
 secondMode.FromXML(testuuus)
+
+test = secondMode.ToXML()
+
+
+thirdMode = Mode()
+thirdMode.FromXML(secondMode.ToXML())
+
+print(thirdMode.name)
+print(secondMode.name)
+
+print(thirdMode.invert)
+print(secondMode.invert)
+
