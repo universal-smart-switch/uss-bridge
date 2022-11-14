@@ -8,7 +8,7 @@ class CharacteristicType(Enum):
     BLANK = 0
     TEMPERATURE = 1
     DATE = 2
-   
+
 
 class Characterisic:
     met = False
@@ -92,35 +92,35 @@ class ModeManager:
         self.CheckSelectedMode()
 
 # testing purpose
-tmpChrc = Characterisic(CharacteristicType.TEMPERATURE,22,False)
-tmpMd = Mode()
+#tmpChrc = Characterisic(CharacteristicType.TEMPERATURE,22,False)
+#tmpMd = Mode()
 
 
-newTemp = 24
-tmpMd.CheckSpecific(CharacteristicType.TEMPERATURE,newTemp)
+#newTemp = 24
+#tmpMd.CheckSpecific(CharacteristicType.TEMPERATURE,newTemp)
 #print(tmpMd.CheckExecuteMet())
 
-newTemp = 22
-tmpMd.CheckSpecific(CharacteristicType.TEMPERATURE,newTemp)
+#newTemp = 22
+#tmpMd.CheckSpecific(CharacteristicType.TEMPERATURE,newTemp)
 #print(tmpMd.CheckExecuteMet())
 
 #jsonstr1 = json.dumps(tmpMd.__dict__)
 #print(jsonstr1)
 
-testuuus = '<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<mode name=\"hiii\" invert=\"False\" executemet=\"False\" onSingle=\"False\">\r\n  <characteristic type=\"1\" value=\"22\" invert=\"False\" met=\"False\" />\r\n</mode>'
+#testuuus = '<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<mode name=\"hiii\" invert=\"False\" executemet=\"False\" onSingle=\"False\">\r\n  <characteristic type=\"1\" value=\"22\" invert=\"False\" met=\"False\" />\r\n</mode>'
 
-secondMode = Mode()
-secondMode.FromXML(testuuus)
+#secondMode = Mode()
+#secondMode.FromXML(testuuus)
 
-test = secondMode.ToXML()
+#test = secondMode.ToXML()
 
 
-thirdMode = Mode()
-thirdMode.FromXML(secondMode.ToXML())
+#thirdMode = Mode()
+#thirdMode.FromXML(secondMode.ToXML())
 
-print(thirdMode.name)
-print(secondMode.name)
+#print(thirdMode.name)
+#print(secondMode.name)
 
-print(thirdMode.invert)
-print(secondMode.invert)
+#print(thirdMode.invert)
+#print(secondMode.invert)
 

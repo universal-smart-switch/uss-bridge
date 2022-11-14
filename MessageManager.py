@@ -3,16 +3,18 @@ from enum import Enum
 import codecs
 from array import array
 # types of messages
+
 class BCCommand(Enum):
-    BCCINVALID = DefinedInformation.DefinedInformation.BCCInvalid
-    BCCGETSWITCHES = DefinedInformation.DefinedInformation.BCCGetSwitches
-    BCCGETMODESWITCHES = DefinedInformation.DefinedInformation.BCCGetModeSwitches
-    BCCGETSWITCHSTATE = DefinedInformation.DefinedInformation.BCCGetStateSwitch
-    BCCSENDSWITCHES = DefinedInformation.DefinedInformation.BCCSendSwitches
-    BCCSENDMODESWITCHES = DefinedInformation.DefinedInformation.BCCSendModeSwitches
-    BCCECHOREQUEST = DefinedInformation.DefinedInformation.BCCEchoRequest
-    BCCSENDSTATESWITCH = DefinedInformation.DefinedInformation.BCCSendStateSwitch
-    BCCGETMODESWITCH = DefinedInformation.DefinedInformation.BCCSetModeSwitch
+    BCCINVALID = DefinedInformation.BCCInvalid
+    BCCGETSWITCHES = DefinedInformation.BCCGetSwitches
+    BCCGETMODESWITCHES = DefinedInformation.BCCGetModeSwitches
+    BCCGETSWITCHSTATE = DefinedInformation.BCCGetStateSwitch
+    BCCSENDSWITCHES = DefinedInformation.BCCSendSwitches
+    BCCSENDMODESWITCHES = DefinedInformation.BCCSendModeSwitches
+    BCCECHOREQUEST = DefinedInformation.BCCEchoRequest
+    BCCECHORESPONSE = DefinedInformation.BCCEchoResponse
+    BCCSENDSTATESWITCH = DefinedInformation.BCCSendStateSwitch
+    BCCSETMODESWITCH = DefinedInformation.BCCSetModeSwitch
 
 class BCMessage:
     data = ""
@@ -55,12 +57,16 @@ class BCMessage:
             self.fullMessage.append(item)
 
         # add mark bytes to message
-        for item in bytes(DefinedInformation.DefinedInformation.BCMark, 'utf-8'):
+        for item in bytes(DefinedInformation.BCMark, 'utf-8'):
             self.fullMessage.append(item)
     
     def CreateFromRaw(self, raw):
 
-        self.fullMessage = raw
+        self.fullMessage = []
+
+        for item in raw:
+            self.fullMessage.append(item)
+
         self.fullMessage.reverse()
         
         self.RemoveFirstItems(self.fullMessage,2)  #remove mark bytes
@@ -99,7 +105,7 @@ class BCMessage:
     
     def GetByteFromBCCommand(command) :
         if (command == BCCommand.BCCGETSWITCHES):
-            return DefinedInformation.DefinedInformation.BCCGetSwitches
+            return DefinedInformation.BCCGetSwitches
         
     def CalcCheckSum(self, dataToCalc ):
         fullVal = 0

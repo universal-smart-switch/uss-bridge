@@ -8,7 +8,7 @@ from MessageManager import BCCommand
 receivingMode = False
 
 def SendMessage(deviceBMA,message):
-    BluetoothManager.sendMessageTo(deviceBMA,message)
+    #BluetoothManager.sendMessageTo(deviceBMA,message)
 
 def thread_bufferValidator():
     while(receivingMode):

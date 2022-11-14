@@ -2,13 +2,20 @@ from datetime import datetime
 import datetime
 import ModeManager
 import HardwareInteractions
+import MessageManager
 
 class GlobalStates:
     timeChanged = False
     switchState = False
+    sendMessage = False
+    
 
     def __init__(self):
         self.currentTime = datetime.datetime.now()
+        
+        self.messageToSend = MessageManager.BCMessage()
+        self.messageToSend.CreateFromScratch(MessageManager.BCCommand.BCCINVALID,"helloWorld",69)   # blank default message
+        
 
     def UpdateSwitchState(self,newState):
         self.switchState = newState
