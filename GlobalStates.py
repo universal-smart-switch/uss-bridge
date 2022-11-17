@@ -3,12 +3,18 @@ import datetime
 import ModeManager
 import HardwareInteractions
 import MessageManager
+from Switch import SwitchList
 
 class GlobalStates:
     timeChanged = False
     switchState = False
     sendMessage = False
-    
+    netManRunning = True
+    savedSwitches = []
+    switchList = SwitchList()
+    savedModes = []
+
+
 
     def __init__(self):
         self.currentTime = datetime.datetime.now()

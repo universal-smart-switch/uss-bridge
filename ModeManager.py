@@ -91,6 +91,8 @@ class ModeManager:
         self.selectedMode.CheckSpecific(CharacteristicType,value)
         self.CheckSelectedMode()
 
+    
+
 # testing purpose
 #tmpChrc = Characterisic(CharacteristicType.TEMPERATURE,22,False)
 #tmpMd = Mode()

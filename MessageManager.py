@@ -6,15 +6,14 @@ from array import array
 
 class BCCommand(Enum):
     BCCINVALID = DefinedInformation.BCCInvalid
+    BCCECHOREQ = DefinedInformation.BCCEchoReq
+    BCCECHOREP = DefinedInformation.BCCEchorRep
     BCCGETSWITCHES = DefinedInformation.BCCGetSwitches
-    BCCGETMODESWITCHES = DefinedInformation.BCCGetModeSwitches
-    BCCGETSWITCHSTATE = DefinedInformation.BCCGetStateSwitch
-    BCCSENDSWITCHES = DefinedInformation.BCCSendSwitches
-    BCCSENDMODESWITCHES = DefinedInformation.BCCSendModeSwitches
-    BCCECHOREQUEST = DefinedInformation.BCCEchoRequest
-    BCCECHORESPONSE = DefinedInformation.BCCEchoResponse
-    BCCSENDSTATESWITCH = DefinedInformation.BCCSendStateSwitch
-    BCCSETMODESWITCH = DefinedInformation.BCCSetModeSwitch
+    BCCGETSWITCHESREP = DefinedInformation.BCCGetSwitchesRep
+    BCCGETMODES = DefinedInformation.BCCGetModes
+    BCCGETMODESREP = DefinedInformation.BCCGetModes
+    BCCGETSYSINFO = DefinedInformation.BCCGetSysInfo
+    BCCGETSYSINFOREP = DefinedInformation.BCCGetSysInfoRep
 
 class BCMessage:
     data = ""
@@ -31,6 +30,10 @@ class BCMessage:
         # int to byte
         idList = switchId.to_bytes(1, 'big')
         self.id = idList[0]
+
+        # add endmark bytes
+        for item in bytes(DefinedInformation.BCMarkEnd, 'utf-8'):
+            self.fullMessage.append(item)
 
         # add all data bytes to message
         for item in self.data:
@@ -89,6 +92,11 @@ class BCMessage:
         self.command = BCCommand(self.commandRaw)
         self.RemoveFirstItems(self.fullMessage,1)
 
+        # remove endmak
+        self.fullMessage.reverse()
+        self.RemoveFirstItems(self.fullMessage,3)  #remove endmark bytes
+        self.fullMessage.reverse()
+
     	# save string
         self.fullMessage.reverse()  # reverse in order to get string in right order
         res = array("b", self.fullMessage)
@@ -131,7 +139,7 @@ class BCMessage:
 #testing
 
 #tmpMsg = BCMessage()
-#tmpMsg.CreateFromScratch(BCCommand.BCCGETMODESWITCHES,"hiWelt",34)
+#tmpMsg.CreateFromScratch(BCCommand.BCCECHOREP,"hiWelt",34)
 
 #testMsg = BCMessage()
 #testMsg.CreateFromRaw(tmpMsg.fullMessage.copy())

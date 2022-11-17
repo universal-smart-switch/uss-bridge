@@ -1,5 +1,8 @@
+import datetime
+import time
 
 BCMark = "$C"
+BCMarkEnd = "$CE"
 BSMark = "$S"
 
 
@@ -10,15 +13,14 @@ BSBytesCheckSum = 1
 BSBytesHeader = BSBytesMark + BSBytesLength
 
 BCCInvalid = 1
-BCCGetSwitches = 2
-BCCGetModeSwitches = 3
-BCCGetStateSwitch = 4
-BCCSendSwitches = 5
-BCCSendModeSwitches = 6
-BCCSendStateSwitch = 7
-BCCEchoRequest = 8
-BCCEchoResponse = 9
-BCCSetModeSwitch = 10
+BCCEchoReq = 2
+BCCEchorRep = 3
+BCCGetSwitches = 4
+BCCGetSwitchesRep = 5
+BCCGetModes = 6
+BCCGetModesRep = 7
+BCCGetSysInfo = 8
+BCCGetSysInfoRep = 9
 
 BluetoothBridgePin = "welcome"
 BluetoothAuthentificate = True
@@ -26,3 +28,6 @@ BluetoothBridgeAdress = "test"
 
 BridgeCOMBaud = 9600
 TCPPort = 5000
+
+def DateTimeToUnix(dateTime):
+    return time.mktime(dateTime.timetuple())

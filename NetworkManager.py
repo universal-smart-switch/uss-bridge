@@ -1,7 +1,7 @@
 from socketserver import BaseRequestHandler, TCPServer
 import DefinedInformation
 import GlobalStates
-import MessageReceiver
+import MessageController
 
 
 class EchoHandler(BaseRequestHandler):
@@ -10,10 +10,7 @@ class EchoHandler(BaseRequestHandler):
         while True:
 
             msg = self.request.recv(16384) #8192
-            #print(type(msg))
-            #print(bytes(msg))
-            #print(msg.length)
-            MessageReceiver.ValidateMessage(msg)
+            MessageController.ValidateMessage(msg)
             if not msg:
                 break
             if (GlobalStates.sendMessage):
@@ -27,6 +24,5 @@ def Start():
 def RequestToSend(message):
     GlobalStates.messageToSend = message
     GlobalStates.sendMessage = True
+    print('[NM]: Sent Request (' + str(message.data) + ')')
         
-if __name__ == '__main__':
-    Start()
