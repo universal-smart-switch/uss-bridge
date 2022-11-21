@@ -24,5 +24,4 @@ def Start():
 def RequestToSend(message):
     GlobalStates.messageToSend = message
     GlobalStates.sendMessage = True
-    print('[NM]: Sent Request (' + str(message.data) + ')')
-        
+    print('[NM]: Sent (' + str(message.data) + ')')

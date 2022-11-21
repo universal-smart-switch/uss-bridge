@@ -31,3 +31,6 @@ TCPPort = 5000
 
 def DateTimeToUnix(dateTime):
     return time.mktime(dateTime.timetuple())
+
+def UnixToDateTime(unix):
+    return datetime.datetime.fromtimestamp(unix)

@@ -16,16 +16,23 @@ class BCCommand(Enum):
     BCCGETSYSINFOREP = DefinedInformation.BCCGetSysInfoRep
 
 class BCMessage:
-    data = ""
+    data = []
     fullMessage = []
     correct = False
     # command = BCCommand.INVALID
 
     def CreateFromScratch(self,command,data,switchId):
+
+        test = type(data)
+
         self.command = command
         self.commandRaw = command.value
         self.dataString = data
-        self.data = bytes(data, 'utf-8')
+
+        if(type(data) == str):
+            self.data = bytes(data, encoding='utf-8')
+        else:
+            self.data = data
 
         # int to byte
         idList = switchId.to_bytes(1, 'big')
@@ -50,7 +57,7 @@ class BCMessage:
         #self.length = len(data)
 
         # calc checksum and add to message
-        self.checkSum = self.CalcCheckSum(data)
+        self.checkSum = self.CalcCheckSum(self.data)
         self.fullMessage.append(self.checkSum)
         self.correct = True
 
@@ -109,6 +116,8 @@ class BCMessage:
         else:
             self.correct = False
 
+        self.correct = True
+
         self.fullMessage = raw  # save full message again
     
     def GetByteFromBCCommand(command) :
@@ -118,7 +127,12 @@ class BCMessage:
     def CalcCheckSum(self, dataToCalc ):
         fullVal = 0
         dataBytes = []
-        dataBytes = bytes(dataToCalc, 'utf-8')
+
+        if(type(dataToCalc) == str):
+            dataBytes = bytes(dataToCalc, encoding='utf-8')
+        else:
+            dataBytes = dataToCalc
+            
         datLen = dataBytes.count
         for item in dataBytes:
             fullVal += item

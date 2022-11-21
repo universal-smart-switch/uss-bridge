@@ -41,11 +41,16 @@ def ReceiveController(message):
 
     if (message.command == BCCommand.BCCGETSWITCHES):
         getSwRep = BCMessage()
-        getSwRep.CreateFromScratch(BCCommand.BCCGETSWITCHESREP,str(GlobalStates.switchList.ToXML()),0)
+        getSwRep.CreateFromScratch(BCCommand.BCCGETSWITCHESREP,GlobalStates.switchList.ToXML(),0)
         NM.RequestToSend(getSwRep)
+
+    if (message.command == BCCommand.BCCGETSWITCHESREP):
+        test = message.dataString
+        GlobalStates.switchList.FromXML(message.dataString)
 
     if (message.command == BCCommand.BCCGETMODES):
         print('unimplemented')
+
 
     if (message.command == BCCommand.BCCGETSYSINFO):
         print('unimplemented')

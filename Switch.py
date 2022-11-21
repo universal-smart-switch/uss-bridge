@@ -3,12 +3,14 @@ import time
 import NameGenerator
 import os
 import xml.etree.ElementTree as ET
+import DefinedInformation as DI
 
 class Switch:
     name = ""
     address = ""
     mode = ""
     stateOn = False
+    manualOverwrite = False
 
     def __init__(self,address):
         self.lastContacted = datetime.datetime.now()
@@ -44,26 +46,28 @@ class SwitchList:
     def ToXML(self):
         root = ET.Element("switchList")
         for item in self.raw:
-            ET.SubElement(root,"switch",name=item.name,address=item.address,stateOn=format(item.stateOn),lastContacted=format(datetime.datetime.timestamp(item.lastContacted)),mode=item.mode)
+            ET.SubElement(root,"switch",name=item.name,address=item.address,stateOn=format(item.stateOn),lastContacted=format(datetime.datetime.timestamp(item.lastContacted)),mode=item.mode,manualOverwrite=item.manualOverwrite)
         return ET.tostring(root, encoding='utf8', method='xml')
 
     
 
-    def FromXML(self,xmldata,rawXML):
+    def FromXML(self,rawXML):
 
+        rawXML = ET.fromstring(rawXML) # get xml from string
         if not rawXML:
-            rawXML = ET.fromstring(xmldata) # get xml from string
+            rawXML = ET.fromstring(rawXML) # get xml from string
         if(rawXML.tag == 'switchList'):
-            self.characteristicsToMet.clear # clear current list
+            self.raw.clear # clear current list
 
             for child in rawXML:    # for each switch
                 # get data from xaml
-                recSw = Switch()
+                recSw = Switch(0)
                 recSw.name = child.get('name')
                 recSw.address = child.get('address')
                 recSw.stateOn = bool(child.get('stateOn'))
-                recSw.lastContacted = datetime.datetime.fromtimestamp(child.get('lastContacted'))
+                recSw.lastContacted = DI.UnixToDateTime(int(child.get('lastContacted')))
                 recSw.mode = child.get('mode')
+                recSw.manualOverwrite = child.get('manualOverwrite')
 
                 self.raw.append(recSw)  # add switch
 
