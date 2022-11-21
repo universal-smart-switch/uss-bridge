@@ -11,7 +11,7 @@ class BCCommand(Enum):
     BCCGETSWITCHES = DefinedInformation.BCCGetSwitches
     BCCGETSWITCHESREP = DefinedInformation.BCCGetSwitchesRep
     BCCGETMODES = DefinedInformation.BCCGetModes
-    BCCGETMODESREP = DefinedInformation.BCCGetModes
+    BCCGETMODESREP = DefinedInformation.BCCGetModesRep
     BCCGETSYSINFO = DefinedInformation.BCCGetSysInfo
     BCCGETSYSINFOREP = DefinedInformation.BCCGetSysInfoRep
 

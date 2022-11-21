@@ -7,12 +7,12 @@ from Switch import SwitchList
 
 class GlobalStates:
     timeChanged = False
-    switchState = False
+    writeLock = False
     sendMessage = False
     netManRunning = True
     savedSwitches = []
     switchList = SwitchList()
-    savedModes = []
+    modeMan = ModeManager.ModeManager()
 
 
 
@@ -21,7 +21,7 @@ class GlobalStates:
         
         self.messageToSend = MessageManager.BCMessage()
         self.messageToSend.CreateFromScratch(MessageManager.BCCommand.BCCINVALID,"helloWorld",69)   # blank default message
-        
+        self.modeMan = ModeManager()
 
     def UpdateSwitchState(self,newState):
         self.switchState = newState

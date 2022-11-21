@@ -65,7 +65,7 @@ class SwitchList:
                 recSw.name = child.get('name')
                 recSw.address = child.get('address')
                 recSw.stateOn = bool(child.get('stateOn'))
-                recSw.lastContacted = DI.UnixToDateTime(int(child.get('lastContacted')))
+                recSw.lastContacted = DI.UnixToDateTime(float(child.get('lastContacted')))
                 recSw.mode = child.get('mode')
                 recSw.manualOverwrite = child.get('manualOverwrite')
 

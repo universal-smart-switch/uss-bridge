@@ -13,9 +13,14 @@ class EchoHandler(BaseRequestHandler):
             MessageController.ValidateMessage(msg)
             if not msg:
                 break
-            if (GlobalStates.sendMessage):
-                self.request.send(bytes(GlobalStates.messageToSend.fullMessage))
-                GlobalStates.sendMessage = False
+            try:
+                if (GlobalStates.sendMessage):
+                    self.request.send(bytes(GlobalStates.messageToSend.fullMessage))
+                    GlobalStates.sendMessage = False
+            except AttributeError:
+                print('[NM]: Attribute Error')
+
+            
 
 def Start():
     server = TCPServer(('', DefinedInformation.TCPPort), EchoHandler)

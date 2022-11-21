@@ -2,6 +2,7 @@ from MessageManager import BCMessage
 from MessageManager import BCCommand
 from ModeManager import Mode
 from ModeManager import Characterisic
+from ModeManager import ModeManager
 import DefinedInformation as DI
 import NetworkManager as NM
 import datetime
@@ -9,6 +10,7 @@ from Switch import Switch
 from Switch import SwitchList
 from GlobalStates import GlobalStates
 import datetime
+import SettingsManager
 
 # create message out of received bytes
 def ValidateMessage(possMes):
@@ -36,21 +38,32 @@ def ReceiveController(message):
         echoResponse.CreateFromScratch(BCCommand.BCCECHOREP,unxStampStr,0)
         NM.RequestToSend(echoResponse)
 
-    if (message.command == BCCommand.BCCECHOREP):
+    elif (message.command == BCCommand.BCCECHOREP):
         print('unimplemented')
 
-    if (message.command == BCCommand.BCCGETSWITCHES):
+    elif (message.command == BCCommand.BCCGETSWITCHES):
         getSwRep = BCMessage()
         getSwRep.CreateFromScratch(BCCommand.BCCGETSWITCHESREP,GlobalStates.switchList.ToXML(),0)
         NM.RequestToSend(getSwRep)
 
-    if (message.command == BCCommand.BCCGETSWITCHESREP):
+    elif (message.command == BCCommand.BCCGETSWITCHESREP):
         test = message.dataString
+        GlobalStates.writeLock = True
         GlobalStates.switchList.FromXML(message.dataString)
+        SettingsManager.SaveSettings()
+        GlobalStates.writeLock = False
 
-    if (message.command == BCCommand.BCCGETMODES):
-        print('unimplemented')
+    elif (message.command == BCCommand.BCCGETMODES):
+        modeStr = GlobalStates.modeMan.ToXML()
+        getModesRep = BCMessage()
+        getModesRep.CreateFromScratch(BCCommand.BCCGETMODESREP,modeStr,0)
+        NM.RequestToSend(getModesRep)
 
+    elif (message.command == BCCommand.BCCGETMODESREP):
+        modeStr = message.dataString
+        GlobalStates.writeLock = True
+        GlobalStates.modeMan.FromXML(modeStr)
+        GlobalStates.writeLock = False
 
-    if (message.command == BCCommand.BCCGETSYSINFO):
+    elif (message.command == BCCommand.BCCGETSYSINFO):
         print('unimplemented')

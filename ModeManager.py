@@ -70,13 +70,17 @@ class Mode:
        tree = ET.ElementTree(root)
        return ET.tostring(root, encoding='utf8', method='xml')
 
+
 class ModeManager:
     modeList = [] # list of possible modes to select
     activated = False
 
-    def __init__(self,globalstates):
-        self.modeList.append(Mode("", Characterisic(CharacteristicType.BLANK,0,False)))   # add default mode -> does nothing
-        self.globalStates = globalstates
+    def __init__(self):
+        defMode = Mode()
+        chr1 = Characterisic(CharacteristicType.BLANK,0,False)
+        defMode.characteristicsToMet.append(chr1)
+        defMode.name = "Default"
+        self.modeList.append(defMode)   # add default mode -> does nothing
 
 
     def CheckSelectedMode(self):
@@ -90,6 +94,19 @@ class ModeManager:
     def UpdateCharacteristic(self,CharacteristicType,value):
         self.selectedMode.CheckSpecific(CharacteristicType,value)
         self.CheckSelectedMode()
+
+    def ToXML(self):
+       root = ET.Element("modeList")
+       
+       for mode in self.modeList:
+            md = ET.SubElement(root,"mode",name=format(mode.name),invert=format(mode.invert),executeMet=format(mode.executeMet),onSingle=format(mode.onSingle))
+            for item in mode.characteristicsToMet:
+                ET.SubElement(md, "characteristic",type=format(item.CharacteristicType.value) ,value=format(item.value),invert=format(item.invert),met=format(item.met))
+       
+       tree = ET.ElementTree(root)
+       return ET.tostring(root, encoding='utf8', method='xml')
+
+    def FromXML(self):
 
     
 
