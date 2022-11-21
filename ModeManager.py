@@ -106,7 +106,36 @@ class ModeManager:
        tree = ET.ElementTree(root)
        return ET.tostring(root, encoding='utf8', method='xml')
 
-    def FromXML(self):
+    def FromXML(self,xmlString):
+        rawXML = ET.fromstring(xmlString)
+
+        if(rawXML.tag == 'modeList'):
+            
+            self.modeList.clear()
+            default = Mode()
+            default.characteristicsToMet.append(Characterisic(CharacteristicType.BLANK,0,0))
+            self.modeList.append(default)
+
+            for child in rawXML:
+
+                recMode = Mode()
+                recMode.name = child.get('name')
+                recMode.invert = format(child.get('invert'))
+                recMode.executeMet = format(child.get('executeMet'))
+                recMode.onSingle = format(child.get('onSingle'))
+
+
+                for subchild in child:
+                    characType = CharacteristicType(int(subchild.get('type')))
+                    characVal = subchild.get('value')
+                    characMet = subchild.get('met')
+                    characInv = subchild.get('invert')
+                    characToAdd = Characterisic(characType,characVal,characInv)
+                    characToAdd.met = characMet
+                    recMode.characteristicsToMet.append(characToAdd)
+                
+                self.modeList.append(recMode)
+    
 
     
 

@@ -51,11 +51,10 @@ class SwitchList:
 
     
 
-    def FromXML(self,rawXML):
+    def FromXML(self,raw):
 
-        rawXML = ET.fromstring(rawXML) # get xml from string
-        if not rawXML:
-            rawXML = ET.fromstring(rawXML) # get xml from string
+        rawXML = ET.fromstring(raw) # get xml from string
+
         if(rawXML.tag == 'switchList'):
             self.raw.clear # clear current list
 

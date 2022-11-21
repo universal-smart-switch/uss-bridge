@@ -63,6 +63,7 @@ def ReceiveController(message):
         modeStr = message.dataString
         GlobalStates.writeLock = True
         GlobalStates.modeMan.FromXML(modeStr)
+        SettingsManager.SaveSettings()
         GlobalStates.writeLock = False
 
     elif (message.command == BCCommand.BCCGETSYSINFO):
