@@ -150,6 +150,10 @@ class BCMessage:
     def RemoveFirstItems(self,coll,amount):
         for x in range(amount):
             coll.remove(coll[0])
+
+
+
+
 #testing
 
 #tmpMsg = BCMessage()

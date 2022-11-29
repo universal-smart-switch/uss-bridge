@@ -1,12 +1,11 @@
 import datetime
 import time
 
+
+# Bridge <-> Client
 BCMark = "$C"
 BCMarkEnd = "$CE"
 BSMark = "$S"
-
-
-
 BSBytesMark = 2
 BSBytesLength = 3
 BSBytesCheckSum = 1
@@ -22,9 +21,12 @@ BCCGetModesRep = 7
 BCCGetSysInfo = 8
 BCCGetSysInfoRep = 9
 
+# Bridge <-> Switch
 BluetoothBridgePin = "welcome"
 BluetoothAuthentificate = True
 BluetoothBridgeAdress = "test"
+BTSwitchMark = "AB"
+
 
 BridgeCOMBaud = 9600
 TCPPort = 5000
