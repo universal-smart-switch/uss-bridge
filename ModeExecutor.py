@@ -1,18 +1,23 @@
 from GlobalStates import GlobalStates as GS
-
+import logging
+import threading
+import time
 
 def Start():
     print('unimplemented')
+    thr = threading.Thread(target=CheckThread)
+    thr.start()
 
 
 def CheckThread():
-    while(GS.writeLock):
-        print('wait for lock end')
-    
-    for mode in GS.modeMan.modeList:
-        mode.CheckExecuteMet()
-
-    for switch in GS.switchList:
+    while(GS.modeExecutorRunning):
+        while(GS.writeLock):
+            print('wait for lock end')
+        
         for mode in GS.modeMan.modeList:
-            if ((mode.name == switch.mode)  and mode.executeMet):
-                print('change switch state from ' + switch.name + ' to ')
+            mode.CheckExecuteMet()
+
+        for switch in GS.switchList.raw:
+            for mode in GS.modeMan.modeList:
+                if ((mode.name == switch.mode)  and mode.executeMet):
+                    print('change switch state from ' + switch.name + ' to ' + str(not switch.stateOn) + "[not implemented]")

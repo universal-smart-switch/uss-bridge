@@ -10,6 +10,7 @@ class GlobalStates:
     writeLock = False
     sendMessage = False
     netManRunning = True
+    modeExecutorRunning = True
     savedSwitches = []
     switchList = SwitchList()
     modeMan = ModeManager.ModeManager()
