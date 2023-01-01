@@ -20,6 +20,7 @@ BCCGetModes = 6
 BCCGetModesRep = 7
 BCCGetSysInfo = 8
 BCCGetSysInfoRep = 9
+BCCSetSwitchState = 10
 
 # Bridge <-> Switch
 BluetoothBridgePin = "welcome"
@@ -36,3 +37,13 @@ def DateTimeToUnix(dateTime):
 
 def UnixToDateTime(unix):
     return datetime.datetime.fromtimestamp(unix)
+
+def GetFixedBool(posBo):
+
+    if (type(posBo) == bool):
+        return posBo
+
+    if (posBo == "True" or posBo == 'True' or posBo == "true" or posBo == 'true'):
+        return True
+    else: 
+        return False

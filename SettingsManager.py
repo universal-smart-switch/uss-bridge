@@ -9,8 +9,8 @@ def LoadSettings():
     if ( not (os.path.exists(dirPath))): # check if file exists
         os.mkdir(dirPath) 
     else:
-        LoadSwitchSettings(dirPath)
         LoadModeSettings(dirPath)
+        LoadSwitchSettings(dirPath)
 
 def LoadSwitchSettings(directoryPath):
     fullPath = directoryPath + '\\SwitchList.xml'
@@ -18,7 +18,7 @@ def LoadSwitchSettings(directoryPath):
         file = open(fullPath,"r")
         switchString =  file.read()
         if (( not len(switchString) == 0)):    # if string has required length
-            GlobalStates.GlobalStates.switchList.FromXML(switchString)
+            GlobalStates.GlobalStates.switchList.FromXML(switchString,False)
 
 def LoadModeSettings(directoryPath):
     fullPath = directoryPath + '\\ModeList.xml'

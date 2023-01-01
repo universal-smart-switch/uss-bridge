@@ -4,6 +4,8 @@ import ModeManager
 import HardwareInteractions
 import MessageManager
 from Switch import SwitchList
+from Switch import Switch
+import SettingsManager as SM
 
 class GlobalStates:
     timeChanged = False
@@ -17,6 +19,7 @@ class GlobalStates:
 
 
     def __init__(self):
+        SM.LoadSettings()
         self.currentTime = datetime.datetime.now()
         
         self.messageToSend = MessageManager.BCMessage()
@@ -33,3 +36,8 @@ class GlobalStates:
 
     # def UpdateTemperature(self,newTemp,modeManager):
         # self.currentTemperature  
+
+    def AddTestSwitch(self):
+        swi = Switch(291)
+        self.switchList.raw.append(swi)
+        

@@ -43,9 +43,8 @@ def SearchSwitches():
 
     # check if device could be a switch
     if bluetooth.lookup_name(bdaddr).find(DI.BTSwitchMark) <= 0:
-      break;
+      break
     
-
     print(str(bluetooth.lookup_name( bdaddr )) + " [" + str(bdaddr) + "]")
     for switch in GS.switchList:
 

@@ -75,12 +75,14 @@ class ModeManager:
     modeList = [] # list of possible modes to select
     activated = False
 
-    def __init__(self):
-        defMode = Mode()
-        chr1 = Characterisic(CharacteristicType.BLANK,0,False)
-        defMode.characteristicsToMet.append(chr1)
-        defMode.name = "Default"
-        self.modeList.append(defMode)   # add default mode -> does nothing
+    #def __init__(self):
+        #defMode = Mode()
+        #chr1 = Characterisic(CharacteristicType.BLANK,0,False)
+        #defMode.characteristicsToMet.append(chr1)
+        #defMode.name = "Default"
+
+        #if ( not (len(self.modeList) > 0)):
+            #self.modeList.append(defMode)   # add default mode -> does nothing
 
 
     def CheckSelectedMode(self):
@@ -114,7 +116,7 @@ class ModeManager:
             self.modeList.clear()
             default = Mode()
             default.characteristicsToMet.append(Characterisic(CharacteristicType.BLANK,0,0))
-            self.modeList.append(default)
+            #self.modeList.append(default)
 
             for child in rawXML:
 

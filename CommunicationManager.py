@@ -7,8 +7,9 @@ from MessageManager import BCCommand
 
 receivingMode = False
 
-def SendMessage(deviceBMA,message):
+def SendMessage(deviceAddr,message,isAddressBluetoothAddress):
     #BluetoothManager.sendMessageTo(deviceBMA,message)
+    print ('unimplemented')
 
 def thread_bufferValidator():
     while(receivingMode):
@@ -19,12 +20,14 @@ def thread_bufferValidator():
 
             while(len(BluetoothManager.buffer) < (DefinedInformation.DefinedInformation.BSBytesHeader)):
                 # wait till length is received
+                print('unimplemented')
                  
             lengthBytes = [BluetoothManager.buffer[4],BluetoothManager.buffere[3],BluetoothManager.buffer[2]]
             length =  int.from_bytes(lengthBytes, "big")
 
             while (len(BluetoothManager.buffer) < (DefinedInformation.DefinedInformation.BSBytesHeader + length) ):
                 # wait till message is complete
+                print('unimplemented')
             
             receivedMessage = BCMessage()
             receivedMessage.CreateFromRaw()

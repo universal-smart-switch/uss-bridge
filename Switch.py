@@ -4,6 +4,7 @@ import NameGenerator
 import os
 import xml.etree.ElementTree as ET
 import DefinedInformation as DI
+import GlobalStates
 
 class Switch:
     name = ""
@@ -16,6 +17,7 @@ class Switch:
         self.lastContacted = datetime.datetime.now()
         self.address = address
         self.name = NameGenerator.get_random_name()
+        self.mode = GlobalStates.GlobalStates.modeMan.modeList[0]  # set default
 
 
 class SwitchList:
@@ -51,12 +53,12 @@ class SwitchList:
 
     
 
-    def FromXML(self,raw):
+    def FromXML(self,rawr,received):
 
-        rawXML = ET.fromstring(raw) # get xml from string
+        rawXML = ET.fromstring(rawr) # get xml from string
 
         if(rawXML.tag == 'switchList'):
-            self.raw.clear # clear current list
+            self.raw.clear() # clear current list
 
             for child in rawXML:    # for each switch
                 # get data from xaml
@@ -64,6 +66,10 @@ class SwitchList:
                 recSw.name = child.get('name')
                 recSw.address = child.get('address')
                 recSw.stateOn = bool(child.get('stateOn'))
+
+                if received:
+                    recSw.stateOn = DI.GetFixedBool(child.get('stateOn'))
+
                 recSw.lastContacted = DI.UnixToDateTime(float(child.get('lastContacted')))
                 recSw.mode = child.get('mode')
                 recSw.manualOverwrite = child.get('manualOverwrite')

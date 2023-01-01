@@ -14,6 +14,7 @@ class BCCommand(Enum):
     BCCGETMODESREP = DefinedInformation.BCCGetModesRep
     BCCGETSYSINFO = DefinedInformation.BCCGetSysInfo
     BCCGETSYSINFOREP = DefinedInformation.BCCGetSysInfoRep
+    BCCSETSWITCHSTATE = DefinedInformation.BCCSetSwitchState
 
 class BCMessage:
     data = []
@@ -38,7 +39,7 @@ class BCMessage:
         idList = switchId.to_bytes(1, 'big')
         self.id = idList[0]
 
-        # add endmark bytes
+        # add endmark byte  s
         for item in bytes(DefinedInformation.BCMarkEnd, 'utf-8'):
             self.fullMessage.append(item)
 

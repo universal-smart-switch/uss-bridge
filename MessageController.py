@@ -11,6 +11,7 @@ from Switch import SwitchList
 from GlobalStates import GlobalStates
 import datetime
 import SettingsManager
+#import CommunicationManager as CM
 
 # create message out of received bytes
 def ValidateMessage(possMes):
@@ -49,7 +50,7 @@ def ReceiveController(message):
     elif (message.command == BCCommand.BCCGETSWITCHESREP):
         test = message.dataString
         GlobalStates.writeLock = True
-        GlobalStates.switchList.FromXML(message.dataString)
+        GlobalStates.switchList.FromXML(message.dataString,True)
         SettingsManager.SaveSettings()
         GlobalStates.writeLock = False
 
@@ -65,6 +66,25 @@ def ReceiveController(message):
         GlobalStates.modeMan.FromXML(modeStr)
         SettingsManager.SaveSettings()
         GlobalStates.writeLock = False
+
+    elif (message.command == BCCommand.BCCSETSWITCHSTATE):
+
+        # find switch with address
+
+        neededSwi = Switch(message.id)
+
+        for swi in GlobalStates.switchList.raw:
+            if (swi.address == message.id):
+                neededSwi = swi
+
+        # get new state and change
+        swiBool = DI.GetFixedBool(message.dataString)
+        if (swiBool == True or swiBool == False):
+            swi.stateOn = swiBool
+            #CM.SendMessage(swi.address,,False)         # unimplemented -> set switch state
+            
+
+
 
     elif (message.command == BCCommand.BCCGETSYSINFO):
         print('unimplemented')

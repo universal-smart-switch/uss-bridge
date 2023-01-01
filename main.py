@@ -6,4 +6,4 @@ import SettingsManager as SM
 if __name__ == '__main__':
     SM.LoadSettings()
     NetworkManager.Start()
-    #BluetoothManager.Start()
+    #BluetoothManager.Start() 
