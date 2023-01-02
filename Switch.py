@@ -12,6 +12,7 @@ class Switch:
     mode = ""
     stateOn = False
     manualOverwrite = False
+    temp = 0
 
     def __init__(self,address):
         self.lastContacted = datetime.datetime.now()

@@ -81,6 +81,18 @@ def ReceiveController(message):
         swiBool = DI.GetFixedBool(message.dataString)
         if (swiBool == True or swiBool == False):
             swi.stateOn = swiBool
+            
+            # save settings
+            GlobalStates.writeLock = True
+            SettingsManager.SaveSettings()
+            GlobalStates.writeLock = False
+
+            #resend to client -> confirmation and sync
+            modeStr = GlobalStates.modeMan.ToXML()
+            getModesRep = BCMessage()
+            getModesRep.CreateFromScratch(BCCommand.BCCGETMODESREP,modeStr,0)
+            NM.RequestToSend(getModesRep)
+
             #CM.SendMessage(swi.address,,False)         # unimplemented -> set switch state
             
 

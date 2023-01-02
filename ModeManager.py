@@ -2,6 +2,9 @@ from enum import Enum
 import DefinedInformation
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
+import DefinedInformation as DI
+import time
+from datetime import datetime
 
 # possible types of characteristics
 class CharacteristicType(Enum):
@@ -19,6 +22,12 @@ class Characterisic:
         if (invert == True):
             self.invert = True
             met = True
+
+    def GetDateTimeVal(self):
+        return DI.UnixToDateTime(self.value)
+
+    def SetDateTimeVal(self,dt):
+        self.value = DI.DateTimeToUnix(dt)
 
 # contains multiple characteristics which have to be met in order to execute switch
 class Mode:
@@ -46,6 +55,50 @@ class Mode:
             else:
                 tempMet = False
         self.executeMet = tempMet  # save new value
+
+    def ReviewExecuteMet(self,temp):
+
+        tempExMet = False
+        singleExMet = False        
+
+        for x in self.characteristicsToMet:
+            
+            
+
+            # check type
+            if (    (x.CharacteristicType == CharacteristicType.TEMPERATURE)    and temp == x.value):
+                if (x.invert == True): x.met = False
+                else: x.met = True
+            
+            if (    (x.CharacteristicType == CharacteristicType.DATE)):
+                dt = x.GetDateTimeVal()
+                # check if datetime is same
+                if (datetime.hour == dt.hour and datetime.minute == x.minute):
+                    if (x.invert == True): x.met = False
+                    else: x.met = True
+
+            if ( not x.met):
+                tempExMet = False
+            else:
+                if self.onSingle == True:
+                    singleExMet = True
+                    tempExMet = True
+                else:
+                    tempExMet == True
+
+        if (singleExMet == True or tempExMet == True):
+            self.executeMet = True
+            return True
+        else:
+            self.executeMet = False
+            return False
+            
+
+        
+                
+
+
+        
 
     def FromXML(self,rawXMLString):
         rawXML = ET.fromstring(rawXMLString)
