@@ -168,12 +168,13 @@ class ModeManager:
             
             self.modeList.clear()
             default = Mode()
-            default.characteristicsToMet.append(Characterisic(CharacteristicType.BLANK,0,0))
+            #default.characteristicsToMet.append(Characterisic(CharacteristicType.BLANK,0,0))
             #self.modeList.append(default)
 
             for child in rawXML:
 
                 recMode = Mode()
+                recMode.characteristicsToMet.clear()
                 recMode.name = child.get('name')
                 recMode.invert = format(child.get('invert'))
                 recMode.executeMet = format(child.get('executeMet'))
