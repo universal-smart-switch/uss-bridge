@@ -10,7 +10,7 @@ class EchoHandler(BaseRequestHandler):
         while True:
 
             msg = self.request.recv(16384) #8192
-            MessageController.ValidateMessage(msg)
+            MessageController.BCValidateMessage(msg)
             if not msg:
                 break
             try:

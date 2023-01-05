@@ -6,6 +6,7 @@ import time
 BCMark = "$C"
 BCMarkEnd = "$CE"
 BSMark = "$S"
+BSMarkEnd = "$E"
 BSBytesMark = 2
 BSBytesLength = 3
 BSBytesCheckSum = 1
@@ -21,6 +22,14 @@ BCCGetModesRep = 7
 BCCGetSysInfo = 8
 BCCGetSysInfoRep = 9
 BCCSetSwitchState = 10
+
+BSInvalid = 1
+BSGetState = 2
+BSGetStateRep = 3
+BSGetTemp = 4
+BSGetTempRep = 5
+BSEchoRequest = 6
+BSEchoReply = 7
 
 # Bridge <-> Switch
 BluetoothBridgePin = "welcome"

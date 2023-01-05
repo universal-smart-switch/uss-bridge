@@ -14,15 +14,15 @@ import SettingsManager
 #import CommunicationManager as CM
 
 # create message out of received bytes
-def ValidateMessage(possMes):
+def BCValidateMessage(possMes):
     msg = BCMessage()
     msg.CreateFromRaw(possMes)
     #md = Mode()   
     #md.FromXML(msg.dataString)
-    ReceiveController(msg)
+    BCReceiveController(msg)
 
 # what to do with message?
-def ReceiveController(message):
+def BCReceiveController(message):
     if (message.command == BCCommand.BCCINVALID):
         print('unimplemented')
 
