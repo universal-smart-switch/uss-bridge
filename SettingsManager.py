@@ -3,8 +3,15 @@ import GlobalStates
 import codecs
 from array import array
 from sys import platform
+import DefinedInformation as DI
+
+
 
 def LoadSettings():
+
+    if ( 'linux' not in platform ):
+        DI.delimiter = "\\"
+
     dirPath = os.path.join(os.getcwd(), "settings")  # get current settings directory
     if ( not (os.path.exists(dirPath))): # check if file exists
         os.mkdir(dirPath) 
@@ -13,7 +20,7 @@ def LoadSettings():
         LoadSwitchSettings(dirPath)
 
 def LoadSwitchSettings(directoryPath):
-    fullPath = directoryPath + '\\SwitchList.xml'
+    fullPath = directoryPath + DI.delimiter + 'SwitchList.xml'
     if(os.path.exists(fullPath)):
         file = open(fullPath,"r")
         switchString =  file.read()
@@ -21,7 +28,7 @@ def LoadSwitchSettings(directoryPath):
             GlobalStates.GlobalStates.switchList.FromXML(switchString,False)
 
 def LoadModeSettings(directoryPath):
-    fullPath = directoryPath + '\\ModeList.xml'
+    fullPath = directoryPath + DI.delimiter +'ModeList.xml'
     if(os.path.exists(fullPath)):
         file = open(fullPath,"r")
         switchString = file.read()

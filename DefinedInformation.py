@@ -1,6 +1,7 @@
 import datetime
 import time
 
+delimiter = "/"
 
 # Bridge <-> Client
 BCMark = "$C"
