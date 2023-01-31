@@ -13,6 +13,10 @@ BSBytesLength = 3
 BSBytesCheckSum = 1
 BSBytesHeader = BSBytesMark + BSBytesLength
 
+BSuuid_service = '0000180f-0000-1000-8000-00805f9b34fb'
+BSuuid_chr_temp = '00002a19-0000-1000-8000-00805f9b34fb'
+BSuuid_chr_state = '00002a19-0000-1000-8000-00805f9b34fb'
+
 BCCInvalid = 1
 BCCEchoReq = 2
 BCCEchorRep = 3

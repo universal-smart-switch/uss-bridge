@@ -5,20 +5,24 @@ import os
 import xml.etree.ElementTree as ET
 import DefinedInformation as DI
 import GlobalStates
+from bleak import BleakClient
 
 class Switch:
     name = ""
     address = ""
+    btaddress = ""
     mode = ""
     stateOn = False
     manualOverwrite = False
     temp = 0
+    isVisible = False
 
     def __init__(self,address):
         self.lastContacted = datetime.datetime.now()
         self.address = address
         self.name = NameGenerator.get_random_name()
         self.mode = GlobalStates.GlobalStates.modeMan.modeList[0]  # set default
+        self.bleakClient = BleakClient(address)
 
 
 class SwitchList:

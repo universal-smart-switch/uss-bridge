@@ -1,65 +1,106 @@
-# Uses Bluez for Linux
-#
-# sudo apt-get install bluez python-bluez
-# 
-# Taken from: https://people.csail.mit.edu/albert/bluez-intro/x232.html
-# Taken from: https://people.csail.mit.edu/albert/bluez-intro/c212.html
-
-import bluetooth
+import asyncio
+from bleak import BleakScanner
+from bleak import BleakClient
+import DefinedInformation as DI
 from GlobalStates import GlobalStates as GS
 from Switch import Switch
-from Switch import SwitchList
-import DefinedInformation as DI
-currentClientBMA = 00
+import SettingsManager as SM
 
-buffer = []
+foundSwitchesAddresses = []
+foundSwitchesAddressesBluetooth = []
 
-def ReceiveMessages():
-  server_sock=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
-  
-  port = 1
-  server_sock.bind(("",port))
-  server_sock.listen(1)
-  
-  client_sock,address = server_sock.accept()
-  print("[BT] Accepted connection from " + str(address))
-  
-  data = client_sock.recv(1024)
-  print("[BT] received [%s]" % data)
-  
-  client_sock.close()
-  server_sock.close()
-  
-def SendMessageTo(targetBluetoothMacAddress,message):
-  port = 1
-  sock=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
-  sock.connect((targetBluetoothMacAddress, port))
-  sock.send(message)
-  sock.close()
-  
-def SearchSwitches():
-  nearby_devices = bluetooth.discover_devices()
-  for bdaddr in nearby_devices:
+foundSwitches = {}
 
-    # check if device could be a switch
-    #if bluetooth.lookup_name(bdaddr).find(DI.BTSwitchMark) <= 0:
-      #break
-    
-    print(str(bluetooth.lookup_name( bdaddr )) + " [" + str(bdaddr) + "]")
-    for switch in GS.switchList:
+async def searchAndAdd():
+    devices = await BleakScanner.discover()
+    for d in devices:
+        #print(d)
+        name = d.name
+        if (name.__contains__("Smartswitch-")):
+            nmSpl = d.name.split('-')
+            swID = nmSpl[1]
+            print(d.name + ":" + d.address)
 
-      # check if switch already known
-      if switch.address == bdaddr:
-        break
+            foundSwitches[swID] = d.address
+            
 
-      # if switch new:
-      anotherSwitch = Switch(bdaddr)
-      GS.switchList.raw.append(anotherSwitch)
+    for id in foundSwitchesAddressesBluetooth:
+        async with BleakClient(foundSwitches[id]) as client:
+
+            switch = Switch()
+            
+
+            # if switch is new -> add to list
+            for savedSwitch in GS.switchList.raw:
+                if savedSwitch.address == id:   # if not new
+                    switch = savedSwitch    # set 
+                    break
+                else:
+                    switch.address = id # save id
+                    switch.btaddress = foundSwitches[id]    # save address
+                    switch.mode = GS.modeMan.modeList[0].name   # set default mode
+                    GS.switchList.raw.append(switch)
 
 
-def Start():
-  SearchSwitches()
 
-    
+            svcs = await client.get_services()  # get all services
+
+            # read values
+            temperatureBytes = await client.read_gatt_char(DI.BSuuid_chr_temp)
+            stateBytes = await client.read_gatt_char(DI.BSuuid_chr_state)
+
+            # hast to be decoded first!!!11
+            temp = int.from_bytes(temperatureBytes,byteorder='big')
+            state = int.from_bytes(stateBytes,byteorder='big')       
+
+            # save states
+            switch.stateOn = state
+            switch.temp = temp
+            
+
+    SM.SaveSwitchSettings   # save switch settings to file
+
+async def getValueFromSwitch(address,valueType):
+    async with BleakClient(address) as client:
+            value = ''
+
+            # read values
+            # hast to be decoded first!!!11
+            if valueType == 'temp':
+                tmp = await client.read_gatt_char(DI.BSuuid_chr_temp)
+                value = int.from_bytes(tmp,byteorder='big')
+            else:
+                state = await client.read_gatt_char(DI.BSuuid_chr_state)
+                value = int.from_bytes(state,byteorder='big') 
+            
+            return value
 
 
+
+async def mainPhone():
+    devices = await BleakScanner.discover()
+    add = ""
+    for d in devices:
+        #print(d)
+        name = d.name
+        if (name.__contains__("Tim")):
+            print(d.name + ":" + d.address)
+            add = d.address
+            break
+
+
+    async with BleakClient(add) as client:
+        svcs = await client.get_services()
+
+        print("Services:")
+        for service in svcs:
+            print(service)
+
+        temperature = await client.read_gatt_char(DI.BSuuid_chr_temp)
+        state = await client.read_gatt_char(DI.BSuuid_chr_state)
+
+        print(int.from_bytes(temperature,byteorder='big'))
+        print(int.from_bytes(state,byteorder='big'))
+
+
+asyncio.run(mainPhone())
