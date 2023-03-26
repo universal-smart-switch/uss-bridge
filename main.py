@@ -6,7 +6,7 @@ import ModeExecutor
 
 
 SM.LoadSettings()
-    #BluetoothManager.Start()
+#BluetoothManager.startUp()         # vllcht zuerst threads dann async wichtig vllcht idk
 ModeExecutor.Start()
 NetworkManager.Start()
     

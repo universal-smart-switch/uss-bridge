@@ -75,17 +75,33 @@ async def getValueFromSwitch(address,valueType):
             
             return value
 
-
+async def setValueSwitch(address,state):
+    print('unimplemented')
 
 async def mainPhone():
     devices = await BleakScanner.discover()
     add = ""
+
+    
     for d in devices:
         #print(d)
         name = d.name
-        if (name.__contains__("Tim")):
+        if (name.__contains__("UART")):
             print(d.name + ":" + d.address)
             add = d.address
+            #cl = BleakClient(add)
+            #await cl.connect()
+            #svcs = await cl.get_services()
+
+            #address = str(KeyValueCoding.getKey(d.details,'identifier'))
+            async with BleakClient(add) as client:
+                svcs = await client.get_services()
+
+                temperature1 = await client.read_gatt_char("4fafc201-1fb5-459e-8fcc-c5c9c331914b")
+                print(temperature)
+                print("Services:")
+                for service in svcs:
+                    print(service)
             break
 
 
@@ -102,5 +118,10 @@ async def mainPhone():
         print(int.from_bytes(temperature,byteorder='big'))
         print(int.from_bytes(state,byteorder='big'))
 
+async def testuss2():
+    add = 1
+
+def startUp():
+    asyncio.run(searchAndAdd)
 
 asyncio.run(mainPhone())

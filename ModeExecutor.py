@@ -1,10 +1,12 @@
 from GlobalStates import GlobalStates as GS
 import logging
+import asyncio
 import threading
 import time
 import BluetoothManager as BT
 from MessageManager import BSMessage
 from MessageManager import BSCommand
+import BluetoothManager as BM
 
 def Start():
     print('unimplemented')
@@ -33,9 +35,7 @@ def CheckThread():
                             switch.stateOn = True
                             
                         print('change switch state from ' + switch.name + ' to ' + str(switch.stateOn) + "[not implemented]")
-                        nMes = BSMessage()
-                        #nMes.CreateFromScratch(BSCommand.BSGETSTATEREP,0xFFFF,switch.address)
-                        #BT.SendMessageTo(switch.btaddress,nMes.fullMessage)
+                        asyncio.run(BM.setValueSwitch(switch.btaddress,switch.stateOn)) # set state
 
                 #if ((mode.name == switch.mode)  and mode.executeMet):
                     #print('change switch state from ' + switch.name + ' to ' + str(not switch.stateOn) + "[not implemented]")
